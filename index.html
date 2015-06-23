@@ -1,0 +1,199 @@
+<html>
+
+<head>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <title>FIM</title>
+    <link rel="icon" href="https://docs.google.com/uc?id=0B0jH18Lft7ypcVdzOWVUVmlnc0E">
+    <!--<script type='text/javascript' src="//wurfl.io/wurfl.js"></script>-->
+</head>
+
+<body id="body">
+    <!--<div id='messagesDiv'></div>-->
+    <p id="updateBox" style="color: red"></p>
+    <input type="hidden" id="executivePassword" placeholder="password">
+    <div style="background-color: #000064; color: white">
+        <input type="text" id="name" placeholder="name" spellcheck="false" autocomplete="off" maxlength="50">
+        <input type="text" id="message" placeholder="message" autocomplete="off" maxlength="50">
+        <button id="sendButton" onclick="send()">SEND</button>
+        <input type="checkbox" checked="true" id="playSound_">
+        <!--<div id="htmlVersion" hidden>3.0</div>-->
+        play sound
+        <input type="color" value="#ffffff" id="colorPicker">
+        <button onclick="refresh()" hidden id="submitColor">Submit Color</button>
+        <input type="text" id="pictureSend" placeholder="Image URL" style="float: right">
+    </div>
+    <br>
+    <img src="https://docs.google.com/uc?id=0B0jH18Lft7ypNkZXaFhValVsdkE" style="width: 20%; heigth: 20%; float: right">
+    <br>
+    <p id="messagesImproved" style="font-size: 150%"></p>
+    <audio id="dingAudio" preload="auto">
+        <source src="https://drive.google.com/uc?id=0B0jH18Lft7ypZS1QeGhyRzJJZzA&authuser=0&export=download" type="audio/mpeg">
+        <source src="https://drive.google.com/uc?id=0B0jH18Lft7ypTmxycld1TFpmekU&authuser=0&export=download" type="audio/ogg"> Your browser does not support this audio element.
+    </audio>
+</body>
+<script>
+    var soundDelay;
+    var myDataRef = new Firebase('https://fim.firebaseio.com/messages');
+    //var newestVersion = new Firebase('https://fim.firebaseio.com/version');
+    //var sound = new Firebase('https://fim.firebaseio.com/soundEffect');
+    //var usedVersion = 4.0;
+    //var soundEffect;
+    /*function soundGet(){
+    sound.on('value', function(snapshot) {
+      soundEffect = new Audio('https://doc-00-20-docs.googleusercontent.com/docs/securesc/jf3ernoi61ddbd6v4qotgsgqabelbk1e/h00chjhtmjajaq947vetim3dnui1aqt3/1432764000000/08194080062508406917/08194080062508406917/0B0jH18Lft7ypUEJMa0V5S2pfd1k?h=02259207663349469905&e=download')
+    });
+      };*/
+    //var ding = new Audio('https://drive.google.com/a/davis.k12.ut.us/file/d/0B0jH18Lft7ypUEJMa0V5S2pfd1k/view?usp=sharing');
+    /*function versionCheck() {
+        newestVersion.on('value', function(snapshot) {
+            var newVersion = snapshot.val();
+            if (document.getElementById('htmlVersion').innerHTML < newVersion.manual) {
+                document.getElementById('updateBox').innerHTML = 'Guess what? Version ' + newVersion.name + ' is available for download ' + '<a href="https://raw.githubusercontent.com/Triforcey/FIM/master/FIM.html" download>here</a>' + '!';
+            }
+        });
+    }*/
+
+    function backgroundUpdate() {
+        if (document.getElementById('colorPicker').value != oldAtt) {
+            document.getElementById('submitColor').removeAttribute('hidden');
+        }
+        oldAtt = document.getElementById('colorPicker').value;
+        document.getElementById('body').setAttribute('style', 'background-color: ' + document.getElementById('colorPicker').value);
+    }
+
+    function refresh() {
+        localStorage.colorPickerStorage = document.getElementById('colorPicker').value;
+        location.reload();
+    }
+
+    function send() {
+        var nameLength = document.getElementById('name').value;
+        var messageLength = document.getElementById('message').value;
+        if (nameLength.length <= 75 && messageLength.length <= 75) {
+            var name = $('#name').val();
+            var message = $('#message').val();
+            var date = new Date();
+            myDataRef.push({
+                name: name,
+                text: message,
+                date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+            });
+            document.getElementById('message').value = '';
+        } else {
+            alert('Maximum name and message length is 50.');
+        }
+    }
+
+    function soundDelayFinish() {
+      soundDelay = 1;
+    }
+
+    function nameSave() {
+        localStorage.nameData = document.getElementById('name').value;
+    }
+
+    function nameGet() {
+        if (localStorage.nameData) {
+            document.getElementById('name').value = localStorage.nameData;
+        }
+        if (localStorage.colorPickerStorage) {
+            document.getElementById('colorPicker').value = localStorage.colorPickerStorage;
+        }
+    }
+
+    function startNameSave() {
+        setInterval(nameSave, 10);
+    }
+
+    function d2h(d) {
+        return d.toString(16);
+    }
+
+    function h2d(h) {
+        return parseInt(h, 16);
+    }
+    //versionCheck();
+    nameGet();
+    setTimeout(startNameSave, 1000);
+    var oldAtt = document.getElementById('colorPicker').value;
+    setInterval(backgroundUpdate, 10);
+    setTimeout(soundDelayFinish, 1000);
+    /*if (WURFL.is_mobile === true) {
+      document.getElementById('sendButton').removeAttribute("hidden");
+    }*/
+    //soundGet();
+    $('#message').keypress(function getKey(event) {
+        var key = event.keyCode;
+        if (key == 13) {
+            send();
+        }
+    });
+    myDataRef.on('child_added', function(snapshot) {
+        var message = snapshot.val();
+        if (message.name == 'executive order') {
+            //possible future password
+            if (true) {
+                //add executive orders here with if statements
+                if (message.text == 'clear') {
+                    myDataRef.remove();
+                    document.getElementById('messagesImproved').innerHTML = '';
+                }
+            }
+        } else {
+            displayChatMessage(message.name, message.text, message.date);
+            var checked = document.getElementById('playSound_').checked;
+            if (checked && soundDelay == 1) {
+              //document.getElementById('dingAudio').load();
+              document.getElementById('dingAudio').currentTime = 0;
+              document.getElementById('dingAudio').play();
+            }
+        }
+    });
+
+    function displayChatMessage(name, text, date) {
+        if (name == 'executive order') {
+            myDataRef.push({
+                name: 'executive order',
+                message: text
+            });
+        } else {
+            //don't like this method, to tricky, no point in having unnecessary complications
+            /*$('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
+            $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;*/
+
+            //this way is less complicated
+            var textColor = document.getElementById('colorPicker').value;
+            //var textColor = textColor.toString();
+            var thatOneArray = [0, 0, 0];
+            for (var i = 0; i < 5; i++) {
+                var currentTextColor = textColor.slice(i + 1, i + 3);
+                currentTextColor = h2d(currentTextColor);
+                currentTextColor = 255 - currentTextColor;
+                thatOneArray[i / 2] = d2h(currentTextColor);
+                if (thatOneArray[i / 2] < 10) {
+                    thatOneArray[i / 2] = '0' + thatOneArray[i / 2];
+                }
+                i = i + 1;
+            }
+            textColor = '#' + thatOneArray[0] + thatOneArray[1] + thatOneArray[2];
+            document.getElementById('messagesImproved').innerHTML = '<p style="font-size: 50%; color: grey">' + date + '</p>' + '<em style="color: grey">' + ' ' + name + ': ' + '</em>' + '<p ' + 'style="color: ' + textColor + '; display: inline-block">' + text + '</p>' + '<br>' + document.getElementById('messagesImproved').innerHTML;
+            //soundEffect.play();
+        }
+    }
+    document.getElementById('pictureSend').onkeypress = function geykey(event) {
+        if (event.keyCode == 13) {
+            var name = $('#name').val();
+            var message = $('#message').val();
+            var date = new Date();
+            myDataRef.push({
+                name: name,
+                text: '<img src="' + document.getElementById('pictureSend').value + '" ' + 'alt="Can not display image." img>',
+                date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+            });
+            document.getElementById('pictureSend').value = '';
+        }
+    };
+</script>
+
+</html>
