@@ -22,6 +22,7 @@
         <input type="color" value="#ffffff" id="colorPicker">
         <button onclick="refresh()" hidden id="submitColor">Submit Color</button>
         <input type="text" id="pictureSend" placeholder="Image URL" style="float: right">
+        <input type="text" id="videoSend" placeholder="Youtube Video URL" style="float: right">
     </div>
     <br>
     <img src="https://docs.google.com/uc?id=0B0jH18Lft7ypNkZXaFhValVsdkE" style="width: 20%; heigth: 20%; float: right">
@@ -181,7 +182,7 @@
             //soundEffect.play();
         }
     }
-    document.getElementById('pictureSend').onkeypress = function geykey(event) {
+    document.getElementById('pictureSend').onkeypress = function getkey(event) {
         if (event.keyCode == 13) {
             var name = $('#name').val();
             var message = $('#message').val();
@@ -193,6 +194,19 @@
             });
             document.getElementById('pictureSend').value = '';
         }
+    };
+    document.getElementById('videoSend').onkeypress = function getkey(event) {
+      if (event.keyCode == 13) {
+        var name = $('#name').val();
+        var message = $('#message').val();
+        var date = new Date();
+        myDataRef.push({
+          name: name,
+          text: '<iframe width="560" height="315" src="' + document.getElementById('videoSend').value.replace('watch?v=', '/embed/') + '" frameborder="0" allowfullscreen></iframe>',
+          date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
+        });
+        document.getElementById('videoSend').value = '';
+      }
     };
 </script>
 
