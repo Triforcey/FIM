@@ -23,6 +23,7 @@
         <button onclick="refresh()" hidden id="submitColor">Submit Color</button>
         <input type="text" id="pictureSend" placeholder="Image URL" style="float: right">
         <input type="text" id="videoSend" placeholder="Youtube Video URL" style="float: right">
+        <button onclick="clearChat()">Clear Chat</button>
     </div>
     <br>
     <img src="https://docs.google.com/uc?id=0B0jH18Lft7ypNkZXaFhValVsdkE" style="width: 20%; heigth: 20%; float: right">
@@ -114,6 +115,25 @@
     function h2d(h) {
         return parseInt(h, 16);
     }
+
+    function clearChat() {
+      var nameLength = document.getElementById('name').value;
+      var messageLength = document.getElementById('message').value;
+      if (nameLength.length <= 75 && messageLength.length <= 75) {
+          /*var name = $('#name').val();
+          var message = $('#message').val();
+          var date = new Date();*/
+          myDataRef.push({
+              name: 'executive order',
+              text: 'clear',
+              //date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+          });
+          document.getElementById('message').value = '';
+      } else {
+          alert('Maximum name and message length is 50.');
+      }
+    }
+
     //versionCheck();
     nameGet();
     setTimeout(startNameSave, 1000);
