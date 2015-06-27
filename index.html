@@ -38,6 +38,7 @@
   </audio>
 </body>
 <script>
+  var secretLimitVar;
   var secret = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
   var secretCounter = 0;
   var soundDelay;
@@ -139,6 +140,10 @@
     }
   }
 
+  function secretLimit() {
+    secretCounter = 0;
+  }
+
   document.onkeydown = function getkey(event) {
     if (event.keyCode == secret[secretCounter]) {
       if (secretCounter == 9) {
@@ -146,9 +151,14 @@
         secretCounter = 0;
       } else {
         secretCounter++;
+        clearTimeout(secretLimitVar);
+        secretLimitVar = setTimeout(secretLimit, 3000);
       }
     } else {
       secretCounter = 0;
+      if (event.keyCode == secret[secretCounter]) {
+        secretCounter++;
+      }
     }
   };
   //versionCheck();
