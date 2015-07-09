@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <input type="password" id="password" placeholder="password" onkeypress="enter(event)">
+    <video controls id="video" width="50%" height="50%" hidden>
+      <source src="../files/call_me.mp4" type="video/mp4">
+      <source src="../files/call_me.ogv" type="video/ogg">
+    </video>
+  </body>
+  <style></style>
+  <script>
+    function enter(event) {
+      if (event.keyCode == 13) {
+        if ($('#password').val() == 'super blobfish') {
+          $('#password').attr('hidden', '');
+          $('#video').removeAttr('hidden');
+        }
+        $('#password').val('');
+      }
+    }
+  </script>
+</html>
