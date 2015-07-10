@@ -16,7 +16,6 @@
     <input type="text" id="message" placeholder="message" autocomplete="off" maxlength="50">
     <button id="sendButton" onclick="send()">SEND</button>
     <input type="checkbox" checked="true" id="playSound_">
-    <!--<div id="htmlVersion" hidden>3.0</div>-->
     play sound
     <input type="color" value="#ffffff" id="colorPicker">
     <button onclick="refresh()" hidden id="submitColor">Submit Color</button>
@@ -43,24 +42,31 @@
   var secretCounter = 0;
   var soundDelay;
   var myDataRef = new Firebase('https://fim.firebaseio.com/messages');
-  //var newestVersion = new Firebase('https://fim.firebaseio.com/version');
-  //var sound = new Firebase('https://fim.firebaseio.com/soundEffect');
-  //var usedVersion = 4.0;
-  //var soundEffect;
-  /*function soundGet(){
-  sound.on('value', function(snapshot) {
-    soundEffect = new Audio('https://doc-00-20-docs.googleusercontent.com/docs/securesc/jf3ernoi61ddbd6v4qotgsgqabelbk1e/h00chjhtmjajaq947vetim3dnui1aqt3/1432764000000/08194080062508406917/08194080062508406917/0B0jH18Lft7ypUEJMa0V5S2pfd1k?h=02259207663349469905&e=download')
-  });
-    };*/
-  //var ding = new Audio('https://drive.google.com/a/davis.k12.ut.us/file/d/0B0jH18Lft7ypUEJMa0V5S2pfd1k/view?usp=sharing');
-  /*function versionCheck() {
-      newestVersion.on('value', function(snapshot) {
-          var newVersion = snapshot.val();
-          if (document.getElementById('htmlVersion').innerHTML < newVersion.manual) {
-              document.getElementById('updateBox').innerHTML = 'Guess what? Version ' + newVersion.name + ' is available for download ' + '<a href="https://raw.githubusercontent.com/Triforcey/FIM/master/FIM.html" download>here</a>' + '!';
+  var ref = new Firebase('https://fim.firebaseio.com');
+  var childCount;
+  var childCountBackup;
+    ref.on('child_changed', function(snapshot) {
+      childCount = snapshot.numChildren();
+      childCountBackup = 1;
+      myDataRef.orderByChild("height").limitToFirst(1).on('child_added', function(snapshot) {
+        if (childCount > 50 && childCountBackup == 1) {
+          childCountBackup = 0;
+          try {
+            var deleteTarget = new Firebase('https://fim.firebaseio.com/messages/' + snapshot.key());
+            console.log('delete target url: ' + 'https://fim.firebaseio.com/messages/' + snapshot.key());
+            deleteTarget.remove();
+          } catch (e) {
+            console.log(e.message);
+            console.log('delete failed');
+          } finally {
+            console.log('delete done');
           }
+        } else {
+          console.log(childCount);
+          console.log('delete target url: ' + 'https://fim.firebaseio.com/messages/' + snapshot.key());
+        }
       });
-  }*/
+    });
 
   function backgroundUpdate() {
     if (document.getElementById('colorPicker').value != oldAtt) {
@@ -192,11 +198,13 @@
       displayChatMessage(message.name, message.text, message.date);
       var checked = document.getElementById('playSound_').checked;
       if (checked && soundDelay == 1) {
-        //document.getElementById('dingAudio').load();
         document.getElementById('dingAudio').currentTime = 0;
         document.getElementById('dingAudio').play();
       }
     }
+    /*myDataRef.limitToLast(5).once('child_added', function(oldSnapshot) {
+      oldSnapshot.remove();
+    });*/
   });
 
   function displayChatMessage(name, text, date) {
