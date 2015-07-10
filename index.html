@@ -47,9 +47,8 @@
   var childCountBackup;
     ref.on('child_changed', function(snapshot) {
       childCount = snapshot.numChildren();
-      childCountBackup = 1;
-      myDataRef.orderByChild("height").limitToFirst(1).on('child_added', function(snapshot) {
-        if (childCount > 50 && childCountBackup == 1) {
+      myDataRef.orderByChild("height").limitToFirst(1).once('child_added', function(snapshot) {
+        if (childCount > 50) {
           childCountBackup = 0;
           try {
             var deleteTarget = new Firebase('https://fim.firebaseio.com/messages/' + snapshot.key());
