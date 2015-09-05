@@ -5,17 +5,19 @@
 	<head>
 		<title>Firebase Instant Messaging</title>
 		<link rel="icon" href="files/favicon.ico">
+		<link href="main.css" rel="stylesheet">
 		<!--<script type='text/javascript' src="//wurfl.io/wurfl.js"></script>-->
 	</head>
 	<body id="body">
 		<!--<div id='messagesDiv'></div>-->
 		<p id="updateBox" style="color: red"></p>
 		<input type="hidden" id="executivePassword" placeholder="password">
-		<div style="background-color: #000064; color: white">
+		<div class="toolbar">
 			<input type="text" id="name" placeholder="name" spellcheck="false" autocomplete="off" maxlength="50">
 			<input type="text" id="message" placeholder="message" autocomplete="off" maxlength="50">
 			<button id="sendButton" onclick="send()">SEND</button>
-			<input type="checkbox" checked="true" id="playSound_"> play sound
+			<input type="checkbox" checked="true" id="playSound_" style="margin-right: 0px;">
+			<p style="display: inline-block; margin: 0px;">play sound</p>
 			<input type="color" value="#ffffff" id="colorPicker">
 			<button onclick="refresh()" hidden id="submitColor">Submit Color</button>
 			<input type="text" id="pictureSend" placeholder="Image URL" style="float: right">
