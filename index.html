@@ -25,7 +25,7 @@
 			<button onclick="clearChat()">Clear Chat</button>
 		</div>
 		<br>
-		<img src="files/FIM_Logo.jpg" style="float: right">
+		<img src="files/FIM_Logo.jpg" style="float: right" width="280" height="210">
 		<br>
 		<p id="messagesImproved" style="font-size: 150%"></p>
 		<audio id="dingAudio" preload="auto">
@@ -46,6 +46,14 @@
 		var ref = new Firebase('https://fim.firebaseio.com');
 		var childCount;
 		var childCountBackup;
+
+		function text2html(string) {
+			var div = document.createElement('div');
+			var text = document.createTextNode(string);
+			div.appendChild(text);
+			return div.innerHTML;
+		}
+
 		ref.on('child_changed', function(snapshot) {
 			childCount = snapshot.numChildren();
 			myDataRef.orderByChild("height").limitToFirst(1).once('child_added', function(snapshot) {
@@ -85,8 +93,8 @@
 			var nameLength = document.getElementById('name').value;
 			var messageLength = document.getElementById('message').value;
 			if (nameLength.length <= 75 && messageLength.length <= 75) {
-				var name = $('#name').val();
-				var message = $('#message').val();
+				var name = text2html($('#name').val());
+				var message = text2html($('#message').val());
 				var date = new Date();
 				myDataRef.push({
 					name: name,
