@@ -1,267 +1,266 @@
 <html>
-<head>
-  <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
-  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-  <title>Firebase Instant Messaging</title>
-  <link rel="icon" href="files/favicon.ico">
-  <!--<script type='text/javascript' src="//wurfl.io/wurfl.js"></script>-->
-</head>
-<body id="body">
-  <!--<div id='messagesDiv'></div>-->
-  <p id="updateBox" style="color: red"></p>
-  <input type="hidden" id="executivePassword" placeholder="password">
-  <div style="background-color: #000064; color: white">
-    <input type="text" id="name" placeholder="name" spellcheck="false" autocomplete="off" maxlength="50">
-    <input type="text" id="message" placeholder="message" autocomplete="off" maxlength="50">
-    <button id="sendButton" onclick="send()">SEND</button>
-    <input type="checkbox" checked="true" id="playSound_">
-    play sound
-    <input type="color" value="#ffffff" id="colorPicker">
-    <button onclick="refresh()" hidden id="submitColor">Submit Color</button>
-    <input type="text" id="pictureSend" placeholder="Image URL" style="float: right">
-    <input type="text" id="videoSend" placeholder="Youtube Video URL" style="float: right">
-    <button onclick="clearChat()">Clear Chat</button>
-  </div>
-  <br>
-  <img src="files/FIM_Logo.jpg" style="float: right">
-  <br>
-  <p id="messagesImproved" style="font-size: 150%"></p>
-  <audio id="dingAudio" preload="auto">
-    <source src="files/Ding_Sound_Effect.mp3" type="audio/mpeg">
-    <source src="files/Ding_Sound_Effect.ogg" type="audio/ogg"> Your browser does not support this audio element.
-  </audio>
-  <audio id="marioCoin" preload="auto">
-    <source src="files/Mario_Coin.mp3" type="audio/mpeg">
-    <source src="files/Mario_Coin.ogg" type="audo/ogg">
-  </audio>
-</body>
-<script>
-  var secretLimitVar;
-  var secret = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
-  var secretCounter = 0;
-  var soundDelay;
-  var myDataRef = new Firebase('https://fim.firebaseio.com/messages');
-  var ref = new Firebase('https://fim.firebaseio.com');
-  var childCount;
-  var childCountBackup;
-    ref.on('child_changed', function(snapshot) {
-      childCount = snapshot.numChildren();
-      myDataRef.orderByChild("height").limitToFirst(1).once('child_added', function(snapshot) {
-        if (childCount > 50) {
-          childCountBackup = 0;
-          try {
-            var deleteTarget = new Firebase('https://fim.firebaseio.com/messages/' + snapshot.key());
-            console.log('delete target url: ' + 'https://fim.firebaseio.com/messages/' + snapshot.key());
-            deleteTarget.remove();
-          } catch (e) {
-            console.log(e.message);
-            console.log('delete failed');
-          } finally {
-            console.log('delete done');
-          }
-        } else {
-          console.log(childCount);
-          console.log('delete target url: ' + 'https://fim.firebaseio.com/messages/' + snapshot.key());
-        }
-      });
-    });
+	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<head>
+		<title>Firebase Instant Messaging</title>
+		<link rel="icon" href="files/favicon.ico">
+		<!--<script type='text/javascript' src="//wurfl.io/wurfl.js"></script>-->
+	</head>
+	<body id="body">
+		<!--<div id='messagesDiv'></div>-->
+		<p id="updateBox" style="color: red"></p>
+		<input type="hidden" id="executivePassword" placeholder="password">
+		<div style="background-color: #000064; color: white">
+			<input type="text" id="name" placeholder="name" spellcheck="false" autocomplete="off" maxlength="50">
+			<input type="text" id="message" placeholder="message" autocomplete="off" maxlength="50">
+			<button id="sendButton" onclick="send()">SEND</button>
+			<input type="checkbox" checked="true" id="playSound_"> play sound
+			<input type="color" value="#ffffff" id="colorPicker">
+			<button onclick="refresh()" hidden id="submitColor">Submit Color</button>
+			<input type="text" id="pictureSend" placeholder="Image URL" style="float: right">
+			<input type="text" id="videoSend" placeholder="Youtube Video URL" style="float: right">
+			<button onclick="clearChat()">Clear Chat</button>
+		</div>
+		<br>
+		<img src="files/FIM_Logo.jpg" style="float: right">
+		<br>
+		<p id="messagesImproved" style="font-size: 150%"></p>
+		<audio id="dingAudio" preload="auto">
+			<source src="files/Ding_Sound_Effect.mp3" type="audio/mpeg">
+			<source src="files/Ding_Sound_Effect.ogg" type="audio/ogg"> Your browser does not support this audio element.
+		</audio>
+		<audio id="marioCoin" preload="auto">
+			<source src="files/Mario_Coin.mp3" type="audio/mpeg">
+			<source src="files/Mario_Coin.ogg" type="audo/ogg">
+		</audio>
+	</body>
+	<script>
+		var secretLimitVar;
+		var secret = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+		var secretCounter = 0;
+		var soundDelay;
+		var myDataRef = new Firebase('https://fim.firebaseio.com/messages');
+		var ref = new Firebase('https://fim.firebaseio.com');
+		var childCount;
+		var childCountBackup;
+		ref.on('child_changed', function(snapshot) {
+			childCount = snapshot.numChildren();
+			myDataRef.orderByChild("height").limitToFirst(1).once('child_added', function(snapshot) {
+				if (childCount > 50) {
+					childCountBackup = 0;
+					try {
+						var deleteTarget = new Firebase('https://fim.firebaseio.com/messages/' + snapshot.key());
+						console.log('delete target url: ' + 'https://fim.firebaseio.com/messages/' + snapshot.key());
+						deleteTarget.remove();
+					} catch (e) {
+						console.log(e.message);
+						console.log('delete failed');
+					} finally {
+						console.log('delete done');
+					}
+				} else {
+					console.log(childCount);
+					console.log('delete target url: ' + 'https://fim.firebaseio.com/messages/' + snapshot.key());
+				}
+			});
+		});
 
-  function backgroundUpdate() {
-    if (document.getElementById('colorPicker').value != oldAtt) {
-      document.getElementById('submitColor').removeAttribute('hidden');
-    }
-    oldAtt = document.getElementById('colorPicker').value;
-    document.getElementById('body').setAttribute('style', 'background-color: ' + document.getElementById('colorPicker').value);
-  }
+		function backgroundUpdate() {
+			if (document.getElementById('colorPicker').value != oldAtt) {
+				document.getElementById('submitColor').removeAttribute('hidden');
+			}
+			oldAtt = document.getElementById('colorPicker').value;
+			document.getElementById('body').setAttribute('style', 'background-color: ' + document.getElementById('colorPicker').value);
+		}
 
-  function refresh() {
-    localStorage.colorPickerStorage = document.getElementById('colorPicker').value;
-    location.reload();
-  }
+		function refresh() {
+			localStorage.colorPickerStorage = document.getElementById('colorPicker').value;
+			location.reload();
+		}
 
-  function send() {
-    var nameLength = document.getElementById('name').value;
-    var messageLength = document.getElementById('message').value;
-    if (nameLength.length <= 75 && messageLength.length <= 75) {
-      var name = $('#name').val();
-      var message = $('#message').val();
-      var date = new Date();
-      myDataRef.push({
-        name: name,
-        text: message,
-        date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
-      });
-      document.getElementById('message').value = '';
-    } else {
-      alert('Maximum name and message length is 50.');
-    }
-  }
+		function send() {
+			var nameLength = document.getElementById('name').value;
+			var messageLength = document.getElementById('message').value;
+			if (nameLength.length <= 75 && messageLength.length <= 75) {
+				var name = $('#name').val();
+				var message = $('#message').val();
+				var date = new Date();
+				myDataRef.push({
+					name: name,
+					text: message,
+					date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+				});
+				document.getElementById('message').value = '';
+			} else {
+				alert('Maximum name and message length is 50.');
+			}
+		}
 
-  function soundDelayFinish() {
-    soundDelay = 1;
-  }
+		function soundDelayFinish() {
+			soundDelay = 1;
+		}
 
-  function nameSave() {
-    localStorage.nameData = document.getElementById('name').value;
-  }
+		function nameSave() {
+			localStorage.nameData = document.getElementById('name').value;
+		}
 
-  function nameGet() {
-    if (localStorage.nameData) {
-      document.getElementById('name').value = localStorage.nameData;
-    }
-    if (localStorage.colorPickerStorage) {
-      document.getElementById('colorPicker').value = localStorage.colorPickerStorage;
-    }
-  }
+		function nameGet() {
+			if (localStorage.nameData) {
+				document.getElementById('name').value = localStorage.nameData;
+			}
+			if (localStorage.colorPickerStorage) {
+				document.getElementById('colorPicker').value = localStorage.colorPickerStorage;
+			}
+		}
 
-  function startNameSave() {
-    setInterval(nameSave, 10);
-  }
+		function startNameSave() {
+			setInterval(nameSave, 10);
+		}
 
-  function d2h(d) {
-    return d.toString(16);
-  }
+		function d2h(d) {
+			return d.toString(16);
+		}
 
-  function h2d(h) {
-    return parseInt(h, 16);
-  }
+		function h2d(h) {
+			return parseInt(h, 16);
+		}
 
-  function clearChat() {
-    var nameLength = document.getElementById('name').value;
-    var messageLength = document.getElementById('message').value;
-    if (nameLength.length <= 75 && messageLength.length <= 75) {
-      /*var name = $('#name').val();
-      var message = $('#message').val();
-      var date = new Date();*/
-      myDataRef.push({
-        name: 'executive order',
-        text: 'clear',
-        //date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
-      });
-      document.getElementById('message').value = '';
-    } else {
-      alert('Maximum name and message length is 50.');
-    }
-  }
+		function clearChat() {
+			var nameLength = document.getElementById('name').value;
+			var messageLength = document.getElementById('message').value;
+			if (nameLength.length <= 75 && messageLength.length <= 75) {
+				/*var name = $('#name').val();
+				var message = $('#message').val();
+				var date = new Date();*/
+				myDataRef.push({
+					name: 'executive order',
+					text: 'clear',
+					//date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+				});
+				document.getElementById('message').value = '';
+			} else {
+				alert('Maximum name and message length is 50.');
+			}
+		}
 
-  function secretLimit() {
-    secretCounter = 0;
-  }
+		function secretLimit() {
+			secretCounter = 0;
+		}
 
-  document.onkeydown = function getkey(event) {
-    if (event.keyCode == secret[secretCounter]) {
-      if (secretCounter == 9) {
-        document.getElementById('marioCoin').play();
-        secretCounter = 0;
-      } else {
-        secretCounter++;
-        clearTimeout(secretLimitVar);
-        secretLimitVar = setTimeout(secretLimit, 3000);
-      }
-    } else {
-      secretCounter = 0;
-      if (event.keyCode == secret[secretCounter]) {
-        secretCounter++;
-      }
-    }
-  };
-  //versionCheck();
-  nameGet();
-  setTimeout(startNameSave, 1000);
-  var oldAtt = document.getElementById('colorPicker').value;
-  setInterval(backgroundUpdate, 10);
-  setTimeout(soundDelayFinish, 5000);
-  /*if (WURFL.is_mobile === true) {
-    document.getElementById('sendButton').removeAttribute("hidden");
-  }*/
-  //soundGet();
-  $('#message').keypress(function getKey(event) {
-    var key = event.keyCode;
-    if (key == 13) {
-      send();
-    }
-  });
-  myDataRef.on('child_added', function(snapshot) {
-    var message = snapshot.val();
-    if (message.name == 'executive order') {
-      //possible future password
-      if (true) {
-        //add executive orders here with if statements
-        if (message.text == 'clear') {
-          myDataRef.remove();
-          document.getElementById('messagesImproved').innerHTML = '';
-        }
-      }
-    } else {
-      displayChatMessage(message.name, message.text, message.date);
-      var checked = document.getElementById('playSound_').checked;
-      if (checked && soundDelay == 1) {
-        document.getElementById('dingAudio').currentTime = 0;
-        document.getElementById('dingAudio').play();
-      }
-    }
-    /*myDataRef.limitToLast(5).once('child_added', function(oldSnapshot) {
-      oldSnapshot.remove();
-    });*/
-  });
+		document.onkeydown = function getkey(event) {
+			if (event.keyCode == secret[secretCounter]) {
+				if (secretCounter == 9) {
+					document.getElementById('marioCoin').play();
+					secretCounter = 0;
+				} else {
+					secretCounter++;
+					clearTimeout(secretLimitVar);
+					secretLimitVar = setTimeout(secretLimit, 3000);
+				}
+			} else {
+				secretCounter = 0;
+				if (event.keyCode == secret[secretCounter]) {
+					secretCounter++;
+				}
+			}
+		};
+		//versionCheck();
+		nameGet();
+		setTimeout(startNameSave, 1000);
+		var oldAtt = document.getElementById('colorPicker').value;
+		setInterval(backgroundUpdate, 10);
+		setTimeout(soundDelayFinish, 5000);
+		/*if (WURFL.is_mobile === true) {
+		  document.getElementById('sendButton').removeAttribute("hidden");
+		}*/
+		//soundGet();
+		$('#message').keypress(function getKey(event) {
+			var key = event.keyCode;
+			if (key == 13) {
+				send();
+			}
+		});
+		myDataRef.on('child_added', function(snapshot) {
+			var message = snapshot.val();
+			if (message.name == 'executive order') {
+				//possible future password
+				if (true) {
+					//add executive orders here with if statements
+					if (message.text == 'clear') {
+						myDataRef.remove();
+						document.getElementById('messagesImproved').innerHTML = '';
+					}
+				}
+			} else {
+				displayChatMessage(message.name, message.text, message.date);
+				var checked = document.getElementById('playSound_').checked;
+				if (checked && soundDelay == 1) {
+					document.getElementById('dingAudio').currentTime = 0;
+					document.getElementById('dingAudio').play();
+				}
+			}
+			/*myDataRef.limitToLast(5).once('child_added', function(oldSnapshot) {
+			  oldSnapshot.remove();
+			});*/
+		});
 
-  function displayChatMessage(name, text, date) {
-    if (name == 'executive order') {
-      myDataRef.push({
-        name: 'executive order',
-        message: text
-      });
-    } else {
-      //don't like this method, to tricky, no point in having unnecessary complications
-      /*$('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
-      $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;*/
+		function displayChatMessage(name, text, date) {
+			if (name == 'executive order') {
+				myDataRef.push({
+					name: 'executive order',
+					message: text
+				});
+			} else {
+				//don't like this method, to tricky, no point in having unnecessary complications
+				/*$('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
+				$('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;*/
 
-      //this way is less complicated
-      var textColor = document.getElementById('colorPicker').value;
-      //var textColor = textColor.toString();
-      var thatOneArray = [0, 0, 0];
-      for (var i = 0; i < 5; i++) {
-        var currentTextColor = textColor.slice(i + 1, i + 3);
-        currentTextColor = h2d(currentTextColor);
-        currentTextColor = 255 - currentTextColor;
-        thatOneArray[i / 2] = d2h(currentTextColor);
-        if (thatOneArray[i / 2] < 10) {
-          thatOneArray[i / 2] = '0' + thatOneArray[i / 2];
-        }
-        i = i + 1;
-      }
-      textColor = '#' + thatOneArray[0] + thatOneArray[1] + thatOneArray[2];
-      document.getElementById('messagesImproved').innerHTML = '<p style="font-size: 50%; color: grey">' + date + '</p>' + '<em style="color: grey">' + ' ' + name + ': ' + '</em>' + '<p ' + 'style="color: ' + textColor + '; display: inline-block">' +
-        text + '</p>' + '<br>' + document.getElementById('messagesImproved').innerHTML;
-      //soundEffect.play();
-    }
-  }
-  document.getElementById('pictureSend').onkeypress = function getkey(event) {
-    if (event.keyCode == 13) {
-      var name = $('#name').val();
-      var message = $('#message').val();
-      var date = new Date();
-      myDataRef.push({
-        name: name,
-        text: '<img src="' + document.getElementById('pictureSend').value + '" ' + 'alt="Can not display image." img>',
-        date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
-      });
-      document.getElementById('pictureSend').value = '';
-    }
-  };
-  document.getElementById('videoSend').onkeypress = function getkey(event) {
-    if (event.keyCode == 13) {
-      var name = $('#name').val();
-      var message = $('#message').val();
-      var date = new Date();
-      myDataRef.push({
-        name: name,
-        text: '<iframe width="560" height="315" src="' + document.getElementById('videoSend').value.replace('watch?v=', '/embed/') + '" frameborder="0" allowfullscreen></iframe>',
-        date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
-      });
-      document.getElementById('videoSend').value = '';
-    }
-  };
-</script>
+				//this way is less complicated
+				var textColor = document.getElementById('colorPicker').value;
+				//var textColor = textColor.toString();
+				var thatOneArray = [0, 0, 0];
+				for (var i = 0; i < 5; i++) {
+					var currentTextColor = textColor.slice(i + 1, i + 3);
+					currentTextColor = h2d(currentTextColor);
+					currentTextColor = 255 - currentTextColor;
+					thatOneArray[i / 2] = d2h(currentTextColor);
+					if (thatOneArray[i / 2] < 10) {
+						thatOneArray[i / 2] = '0' + thatOneArray[i / 2];
+					}
+					i++;
+				}
+				textColor = '#' + thatOneArray[0] + thatOneArray[1] + thatOneArray[2];
+				document.getElementById('messagesImproved').innerHTML = '<p style="font-size: 50%; color: grey">' + date + '</p>' + '<em style="color: grey">' + ' ' + name + ': ' + '</em>' + '<p ' + 'style="color: ' + textColor + '; display: inline-block">' +
+					text + '</p>' + '<br>' + document.getElementById('messagesImproved').innerHTML;
+				//soundEffect.play();
+			}
+		}
+		document.getElementById('pictureSend').onkeypress = function getkey(event) {
+			if (event.keyCode == 13) {
+				var name = $('#name').val();
+				var message = $('#message').val();
+				var date = new Date();
+				myDataRef.push({
+					name: name,
+					text: '<img src="' + document.getElementById('pictureSend').value + '" ' + 'alt="Can not display image." img>',
+					date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+				});
+				document.getElementById('pictureSend').value = '';
+			}
+		};
+		document.getElementById('videoSend').onkeypress = function getkey(event) {
+			if (event.keyCode == 13) {
+				var name = $('#name').val();
+				var message = $('#message').val();
+				var date = new Date();
+				myDataRef.push({
+					name: name,
+					text: '<iframe width="560" height="315" src="' + document.getElementById('videoSend').value.replace('watch?v=', '/embed/') + '" frameborder="0" allowfullscreen></iframe>',
+					date: (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
+				});
+				document.getElementById('videoSend').value = '';
+			}
+		};
+	</script>
 </html>
