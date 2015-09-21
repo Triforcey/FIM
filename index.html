@@ -257,8 +257,9 @@
 				document.getElementById('messagesImproved').innerHTML = '<p style="font-size: 50%; color: grey">' + date + '</p>' + '<em style="color: grey">' + ' ' + name + ': ' + '</em>' + '<p ' + 'style="color: ' + textColor + '; display: inline-block">' + text + '</p>' + '<br>' + document.getElementById('messagesImproved').innerHTML;
 				//soundEffect.play();
 				if (document.getElementById('playSound__').checked) {
-					//responsiveVoice.speak(html2text(text));
-					say(text);
+					if (soundDelay == 1) {
+						say(text);
+					}
 				}
 			}
 		}
