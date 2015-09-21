@@ -2,7 +2,6 @@
 	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-	<script src='https://code.responsivevoice.org/responsivevoice.js'></script>
 	<head>
 		<title>Firebase Instant Messaging</title>
 		<link rel="icon" href="files/favicon.ico">
@@ -55,6 +54,11 @@
 			var text = document.createTextNode(string);
 			div.appendChild(text);
 			return div.innerHTML;
+		}
+
+		function say(text) {
+			var speech = new SpeechSynthesisUtterance(text);
+			speechSynthesis.speak(speech);
 		}
 
 		function html2text(string) {
@@ -253,7 +257,8 @@
 				document.getElementById('messagesImproved').innerHTML = '<p style="font-size: 50%; color: grey">' + date + '</p>' + '<em style="color: grey">' + ' ' + name + ': ' + '</em>' + '<p ' + 'style="color: ' + textColor + '; display: inline-block">' + text + '</p>' + '<br>' + document.getElementById('messagesImproved').innerHTML;
 				//soundEffect.play();
 				if (document.getElementById('playSound__').checked) {
-					responsiveVoice.speak(html2text(text));
+					//responsiveVoice.speak(html2text(text));
+					say(text);
 				}
 			}
 		}
